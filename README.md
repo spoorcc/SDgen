@@ -1,5 +1,7 @@
 # ServiceDispatcher IDL
 
+[![Build Status](https://travis-ci.org/spoorcc/SDgen.svg?branch=master)](https://travis-ci.org/spoorcc/SDgen)
+
 This (proof-of-concept) script generates header files based on OMG IDL language.
 
 ## Setup
