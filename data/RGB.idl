@@ -1,0 +1,16 @@
+module RGB {
+
+    struct color {
+         octet red;
+         octet green;
+         octet blue;
+    };
+
+    interface client {
+        void Init(in fpServiceSubscriber_t fpSubscriber);
+
+        void SetColor(in octet red, in octet green, in octet blue);
+        void GetColor();
+        void SetWhite(in octet white);
+   };
+};
