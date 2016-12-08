@@ -1,5 +1,7 @@
 # ServiceDispatcher IDL
 
+[![Build Status](https://travis-ci.org/spoorcc/SDgen.svg?branch=master)](https://travis-ci.org/spoorcc/SDgen)
+
 This (proof-of-concept) script generates header files based on OMG IDL language.
 
 ## Setup
@@ -13,4 +15,9 @@ When passed to SDgen as only argument a RGB_client.h file is generated.
 
     bin/SDgen.py data/RGB.idl
 
+## Background info
+
+* [Intro to OMG IDL](https://mhanckow.students.wmi.amu.edu.pl/corba/IDL.html)
+* [idl_parser on pip](https://pypi.python.org/pypi/idl_parser/)
+* [ServiceDispatcher](https://github.com/Tom360V/ServiceDispatcher)
 

@@ -7,11 +7,11 @@ setup(
   name                 = 'SDgen',
   version              = version,
   description          = 'Interface generator for ServiceDispatcher',
-  url                  = 'http://github.com/spoorcc/ServiceDispatcherIDL',
+  url                  = 'http://github.com/spoorcc/SDgen',
   author               = 'Ben Spoor',
   author_email         = 'ben.spoor@gmail.com',
   packages             = find_packages(),
   zip_safe             = True,
   install_requires     = ['idl_parser'],
-  scripts              = ['bin/SDgen'],
+  scripts              = ['bin/SDgen.py'],
 )
