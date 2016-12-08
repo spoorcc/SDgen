@@ -23,25 +23,22 @@ header_file_template='''
  *  Created on: {date}
  *      Author: {author}
  */
-'''
 
-header_inc_guard_open_template='''
+#ifndef {inc_guard}_H_
+#define {inc_guard}_H_
 
-#ifndef {interface}_H_
-#define {interface}_H_
+#include "ServiceDispatcher.h"
 
-'''
+{body}
 
-header_inc_guard_close_template='''
-
-#endif /* {interface}_H_ */
+#endif /* {inc_guard}_H_ */
 
 '''
 
 function_template='''
-{indent}void S_{module}{interface}_{method}('''
+{indent}void S_{module}{interface}_{method}({arguments});'''
 
-
+arg_template='''{type} {name}'''
 
 def mkdir_p(path):
     ''' Make directory if it does not exist '''
@@ -59,7 +56,6 @@ def process_idl_file(idl_str, outdir):
   global_module = _parser.load(idl_str)
 
   for module in global_module.modules:
-
      generate_c_module(module, outdir)
 
 def generate_c_module(module, outdir):
@@ -69,39 +65,38 @@ def generate_c_module(module, outdir):
 
 
 def generate_c_interface(module_name, interface, outdir):
+    ''' Generate a C header file for an interface '''
 
     filename = os.path.join(outdir, "%s_%s.h" % (module_name, interface.name))
 
     with open(filename, 'w') as header_file:
         logging.info('Creating %s' % header_file.name)
-        header_file.write(header_file_template.format(author=__author__,
-                                                      date=datetime.date.today().isoformat(),
-                                                      filename=filename))
 
+        body = generate_c_methods(module_name, interface)
         inc_guard = (module_name+interface.name).upper()
 
-        header_file.write(header_inc_guard_open_template.format(interface=inc_guard))
-        header_file.write('\n#include "ServiceDispatcher.h"\n')
-        header_file.write(generate_c_methods(module_name, interface))
-        header_file.write(header_inc_guard_close_template.format(interface=inc_guard))
+        header_file.write(header_file_template.format(author=__author__,
+                                                      date=datetime.date.today().isoformat(),
+                                                      filename=filename,
+                                                      inc_guard=inc_guard,
+                                                      body=body))
 
 def generate_c_methods(module_name, interface):
 
     functions = []
 
-
     for method in interface.methods:
 
-        functions += [function_template.format(indent=INDENT,
+        arguments = [arg_template.format(type=generate_c_type(argument.type),
+                                         name=argument.name,
+                                         indent=INDENT) for argument in method.arguments]
+        arguments = ',\n{indent}'.format(indent=3*INDENT).join(arguments) or 'void'
+
+        functions += [function_template.format(arguments=arguments,
+                                               indent=INDENT,
                                                module=module_name,
                                                interface=interface.name,
                                                method=method.name)]
-
-        for argument in method.arguments:
-            functions += ['%s%s %s,' % (INDENT*3, generate_c_type(argument.type),
-                                           argument.name)]
-
-        functions += [INDENT * 2 + ');']
 
     return '\n'.join(functions)
 
