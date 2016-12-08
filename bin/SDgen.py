@@ -3,6 +3,10 @@
 import sys
 import datetime
 
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 from idl_parser import parser
 
 __author__ = 'Ben'
@@ -53,6 +57,7 @@ def generate_c_interface(module_name, interface):
     filename = "%s_%s.h" % (module_name, interface.name)
 
     with open(filename, 'w') as header_file:
+        logging.info('Creating %s' % header_file.name)
         header_file.write(header_file_template.format(author=__author__,
                                                       date=datetime.date.today().isoformat(),
                                                       filename=filename))
@@ -99,4 +104,5 @@ def generate_c_type(idl_type):
 if __name__ == '__main__':
 
     with open(sys.argv[1],'r') as idl_file:
+      logger.info('Converting %s' % idl_file.name)
       main(idl_file.read())
