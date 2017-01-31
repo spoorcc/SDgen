@@ -139,4 +139,4 @@ if __name__ == '__main__':
     mkdir_p(args.outdir)
 
     for path in args.files:
-        process_idl_file(idl_file, args.outdir)
+        process_idl_file(path, args.outdir)
