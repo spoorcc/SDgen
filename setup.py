@@ -13,5 +13,6 @@ setup(
   packages             = find_packages(),
   zip_safe             = True,
   install_requires     = ['idl_parser'],
+  extras_require       = {'test': ['behave>=1.2.4']},
   scripts              = ['bin/SDgen.py'],
 )
