@@ -51,35 +51,49 @@ def mkdir_p(path):
         else:
             raise
 
-def process_idl_file(idl_str, outdir):
-  _parser = idl_parser.IDLParser()
-  global_module = _parser.load(idl_str)
+def process_idl_file(idl_path, outdir):
+
+  global_module = open_and_parse_file(idl_path)
 
   for module in global_module.modules:
      generate_c_module(module, outdir)
 
+def open_and_parse_file(file_path):
+
+    with open(file_path,'r') as idl_file:
+        logger.info('Parsing %s' % idl_file.name)
+        _parser = idl_parser.IDLParser()
+        global_module = _parser.load(idl_file.read())
+
+    return global_module
+
 def generate_c_module(module, outdir):
 
     for interface in module.interfaces:
-        generate_c_interface(module.name, interface, outdir)
+        write_file( *generate_c_interface(module.name, interface, outdir))
 
+def write_file(path, content):
 
-def generate_c_interface(module_name, interface, outdir):
+    with open(path, 'w') as outfile:
+        logger.info('Writing %s' % outfile.name)
+        outfile.write(content)
+
+def generate_c_interface(module_name, interface, outdir=''):
     ''' Generate a C header file for an interface '''
 
     filename = os.path.join(outdir, "%s_%s.h" % (module_name, interface.name))
 
-    with open(filename, 'w') as header_file:
-        logging.info('Creating %s' % header_file.name)
+    logging.info('Creating %s' % filename)
 
-        body = generate_c_methods(module_name, interface)
-        inc_guard = (module_name+interface.name).upper()
+    body = generate_c_methods(module_name, interface)
+    inc_guard = (module_name+interface.name).upper()
 
-        header_file.write(header_file_template.format(author=__author__,
-                                                      date=datetime.date.today().isoformat(),
-                                                      filename=filename,
-                                                      inc_guard=inc_guard,
-                                                      body=body))
+    content = header_file_template.format(author=__author__,
+                                          date=datetime.date.today().isoformat(),
+                                          filename=filename,
+                                          inc_guard=inc_guard,
+                                          body=body)
+    return (filename, content)
 
 def generate_c_methods(module_name, interface):
 
@@ -126,6 +140,4 @@ if __name__ == '__main__':
     mkdir_p(args.outdir)
 
     for path in args.files:
-        with open(path,'r') as idl_file:
-            logger.info('Converting %s' % idl_file.name)
-            process_idl_file(idl_file.read(), args.outdir)
+        process_idl_file(path, args.outdir)
