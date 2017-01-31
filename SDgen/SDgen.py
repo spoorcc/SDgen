@@ -53,7 +53,7 @@ def mkdir_p(path):
 
 def process_idl_file(idl_path, outdir):
 
-  toplevel = open_and_parse_file(idl_path)
+  global_module = open_and_parse_file(idl_path)
 
   for module in global_module.modules:
      generate_c_module(module, outdir)
