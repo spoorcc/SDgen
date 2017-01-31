@@ -15,4 +15,4 @@ install:
 
 # command to run tests
 script:
-  - bin/SDgen.py data/RGB.idl && cat RGB_client.h
+  - SDgen.py data/RGB.idl && cat RGB_client.h
