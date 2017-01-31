@@ -18,3 +18,4 @@ install:
 script:
   - SDgen.py data/RGB.idl && cat RGB_client.h
   - behave
+
