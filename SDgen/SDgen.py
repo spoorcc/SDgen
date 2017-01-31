@@ -74,7 +74,8 @@ def generate_c_module(module, outdir):
 
 def write_file(path, content):
 
-    with open(filename, 'w') as outfile:
+    with open(path, 'w') as outfile:
+        logger.info('Writing %s' % outfile.name)
         outfile.write(content)
 
 def generate_c_interface(module_name, interface, outdir=''):
